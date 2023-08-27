@@ -63,7 +63,7 @@ int check_mode(stack_t *stack)
 }
 
 /**
- * monty_push - Pushes a value to a stack_t linked list.
+ * handle_check_mode - Pushes a value to a stack_t linked list.
  *
  * @stack: A pointer to the top mode node of a stack_t linked list.
  * @tmp_s: A pointer to a temorary stack_t linked list.
