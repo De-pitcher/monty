@@ -1,6 +1,6 @@
 #include "monty.h"
 
-char **op_toks = NULL;
+/* char **op_toks = NULL;*/
 
 /**
  * main - The entry point for monty Interpretor.
