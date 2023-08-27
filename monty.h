@@ -76,6 +76,7 @@ void free_tokens(void);
 void free_stack(stack_t **stack);
 int init_stack(stack_t **stack);
 int check_mode(stack_t *stack);
+void handle_check_mode(stack_t **stack, stack_t *tmp_s, stack_t *new_s);
 unsigned int tok_len(void);
 int exe_monty(FILE *script_fd);
 
