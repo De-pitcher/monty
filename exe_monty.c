@@ -1,16 +1,15 @@
 #define _GNU_SOURCE
 #include "monty.h"
 
-void free_tokens(void);
-unsigned int tok_len(void);
 int is_empty_line(char *line, char *delims);
-void (*get_op_func(char *opcode))(stack_t**, unsigned int);
+void (*get_op_func(char *opcode))(stack_t**, char **, unsigned int);
 int exe_monty(FILE *script_fd);
 
 /**
  * free_tokens - Frees the global op_toks array of strings.
+ * @op_toks: OP tokens
  */
-void free_tokens(void)
+void free_tokens(char **op_toks)
 {
 	size_t i = 0;
 
@@ -25,10 +24,11 @@ void free_tokens(void)
 
 /**
  * tok_len - Gets the length of current op_toks.
+ * @op_toks: OP tokens
  *
  * Return: Length of current op_toks (as int).
  */
-unsigned int tok_len(void)
+unsigned int tok_len(char **op_toks)
 {
 	unsigned int toks_len = 0;
 
@@ -69,7 +69,7 @@ int is_empty_line(char *line, char *delims)
  *
  * Return: A pointer to the corresponding function.
  */
-void (*get_op_func(char *opcode))(stack_t**, unsigned int)
+void (*get_op_func(char *opcode))(stack_t**, char **, unsigned int)
 {
 	instruction_t op_funcs[] = {
 		{"push", monty_push},
@@ -111,10 +111,10 @@ void (*get_op_func(char *opcode))(stack_t**, unsigned int)
 int exe_monty(FILE *script_fd)
 {
 	stack_t *stack = NULL;
-	char *line = NULL;
+	char *line = NULL, **op_toks = NULL;
 	size_t len = 0, status = EXIT_SUCCESS;
 	unsigned int line_number = 0, prev_tok_len = 0;
-	void (*op_func)(stack_t**, unsigned int);
+	void (*op_func)(stack_t**, char **, unsigned int);
 
 	if (init_stack(&stack) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
@@ -132,7 +132,7 @@ int exe_monty(FILE *script_fd)
 		}
 		else if (op_toks[0][0] == '#')
 		{
-			free_tokens();
+			free_tokens(op_toks);
 			continue;
 		}
 		op_func = get_op_func(op_toks[0]);
@@ -140,21 +140,21 @@ int exe_monty(FILE *script_fd)
 		{
 			free_stack(&stack);
 			status = unknown_op_error(op_toks[0], line_number);
-			free_tokens();
+			free_tokens(op_toks);
 			break;
 		}
-		prev_tok_len = tok_len();
-		op_func(&stack, line_number);
-		if (tok_len() != prev_tok_len)
+		prev_tok_len = tok_len(op_toks);
+		op_func(&stack, op_toks, line_number);
+		if (tok_len(op_toks) != prev_tok_len)
 		{
 			if (op_toks && op_toks[prev_tok_len])
 				status = atoi(op_toks[prev_tok_len]);
 			else
 				status = EXIT_FAILURE;
-			free_tokens();
+			free_tokens(op_toks);
 			break;
 		}
-		free_tokens();
+		free_tokens(op_toks);
 	}
 	free_stack(&stack);
 

@@ -4,12 +4,14 @@
  * monty_nop - Does absolutely nothing for the monty opcode 'nop'.
  *
  * @stack: A pointer to the top mode node of a stack list.
+ * @op_toks: OP tokens.
  * @line_number: The current working line number of a monty bytecode file.
  */
-void monty_nop(stack_t **stack, unsigned int line_number)
+void monty_nop(stack_t **stack, char **op_toks, unsigned int line_number)
 {
 	(void)stack;
 	(void)line_number;
+	(void)op_toks;
 }
 
 /**
@@ -17,20 +19,21 @@ void monty_nop(stack_t **stack, unsigned int line_number)
  *               node of a stack_t linked list.
  *
  * @stack: A pointer to the top mode node of a stack list.
+ * @op_toks: OP tokens.
  * @line_number: The current working line number of a monty bytecode file.
  */
-void monty_pchar(stack_t **stack, unsigned int line_number)
+void monty_pchar(stack_t **stack, char **op_toks, unsigned int line_number)
 {
 	if ((*stack)->next == NULL)
 	{
-		set_op_tok_error(pchar_error(line_number, "stack empty"));
+		set_op_tok_error(op_toks, pchar_error(line_number, "stack empty"));
 
 		return;
 	}
 
 	if ((*stack)->next->n < 0 || (*stack)->next->n > 127)
 	{
-		set_op_tok_error(pchar_error(line_number, "value out of range"));
+		set_op_tok_error(op_toks, pchar_error(line_number, "value out of range"));
 		return;
 	}
 
@@ -41,11 +44,13 @@ void monty_pchar(stack_t **stack, unsigned int line_number)
  * monty_pstr - Prints the string contained in a stack list.
  *
  * @stack: A pointer to the top mode node of a stack list.
+ * @op_toks: OP tokens.
  * @line_number: The current working line number of a monty bytecode file.
  */
-void monty_pstr(stack_t **stack, unsigned int line_number)
+void monty_pstr(stack_t **stack, char **op_toks, unsigned int line_number)
 {
 	stack_t *tmp = (*stack)->next;
+	(void)op_toks;
 
 	while (tmp && tmp->n != 0 && (tmp->n > 0 && tmp->n <= 127))
 	{
@@ -61,11 +66,13 @@ void monty_pstr(stack_t **stack, unsigned int line_number)
  * monty_rotl - Rotates the top value of a stack list.
  *
  * @stack: A pointer to the top mode node of a stack list.
+ * @op_toks: OP tokens.
  * @line_number: The current working line number of a monty bytecode file.
  */
-void monty_rotl(stack_t **stack, unsigned int line_number)
+void monty_rotl(stack_t **stack, char **op_toks, unsigned int line_number)
 {
 	stack_t *top, *bottom;
+	(void)op_toks;
 
 	if ((*stack)->next == NULL || (*stack)->next->next == NULL)
 		return;
@@ -89,11 +96,13 @@ void monty_rotl(stack_t **stack, unsigned int line_number)
  * monty_rotr - Rotates the bottom value of a stack list.
  *
  * @stack: A pointer to the top mode node of a stack list.
+ * @op_toks: OP tokens.
  * @line_number: The current working line number of a monty bytecode file.
  */
-void monty_rotr(stack_t **stack, unsigned int line_number)
+void monty_rotr(stack_t **stack, char **op_toks, unsigned int line_number)
 {
 	stack_t *top, *bottom;
+	(void)op_toks;
 
 	if ((*stack)->next == NULL || (*stack)->next->next == NULL)
 		return;
